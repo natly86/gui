@@ -13,20 +13,17 @@ namespace addressbook_tests_white
         [Test]
         public void TestGroupRemove()
         {
+            app.Groups.GroupIsPresent();
+
             List<GroupData> oldGroups = app.Groups.GetGroupList();
 
-            GroupData newGroup = new GroupData()
-            {
-                Name = "test"
-            };
-
-            app.Groups.Remove(newGroup);
+            app.Groups.Remove(0);
 
             List<GroupData> newGroups = app.Groups.GetGroupList();
             oldGroups.Sort();
             newGroups.Sort();
 
-            Assert.AreEqual(oldGroups, newGroups);
+            Assert.AreEqual(oldGroups.Count - 1, newGroups.Count);
         }
     }
 }

@@ -36,13 +36,12 @@ namespace addressbook_tests_white
             return list;
         }
 
-        public void Remove(GroupData newGroup)
+        public void Remove(int index)
         {
             Window dialogue = OpenGroupsDialogue();
-            dialogue.Get<Button>("uxNewAddressButton").Click();
-            TextBox textBox = (TextBox)dialogue.Get(SearchCriteria.ByControlType(ControlType.Edit));
-            textBox.Enter(newGroup.Name);
-            Keyboard.Instance.PressSpecialKey(KeyboardInput.SpecialKeys.RETURN);
+            Tree tree = dialogue.Get<Tree>("uxAddressTreeView");
+            TreeNode root = tree.Nodes[0];
+            root.Nodes[index].Select();
             dialogue.Get<Button>("uxDeleteAddressButton").Click();
             Keyboard.Instance.PressSpecialKey(KeyboardInput.SpecialKeys.RETURN);
             CloseGroupsDialogue(dialogue);
@@ -67,6 +66,28 @@ namespace addressbook_tests_white
         {
             manager.MainWindow.Get<Button>("groupButton").Click();
             return manager.MainWindow.ModalWindow(GROUPWINTITLE);
+        }
+
+        public void GroupIsPresent()
+        {
+            if (GetGroupCount() <= 1)
+            {
+                GroupData newGroup = new GroupData()
+                {
+                    Name = "test"
+                };
+                Add(newGroup);
+            }
+        }
+
+        public int GetGroupCount()
+        {
+            Window diaologue = OpenGroupsDialogue();
+            Tree tree = diaologue.Get<Tree>("uxAddressTreeView");
+            TreeNode root = tree.Nodes[0];
+            int count = root.Nodes.Count();
+            CloseGroupsDialogue(diaologue);
+            return count;
         }
     }
 }
